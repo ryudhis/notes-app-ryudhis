@@ -2,7 +2,7 @@
 import { Button, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import React from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const HomePage = () => {
   const router = useRouter();
