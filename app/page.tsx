@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 const HomePage = () => {
   const router = useRouter();
   return (
-    <main className="flex flex-col gap-28 items-center py-8 max-w-[320px] mx-auto">
-      <h1 className="text-2xl font-bold text-text-primary">
+    <main className="flex flex-col gap-24 items-center py-8 max-w-[320px] mx-auto max-h-screen">
+      <h1 className="text-2xl font-black text-text-primary">
         Ryudhis&apos;s Notes
       </h1>
       <div className="flex flex-col gap-8 items-center">
