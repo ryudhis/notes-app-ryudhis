@@ -7,11 +7,11 @@ import { useRouter } from "next/navigation";
 const HomePage = () => {
   const router = useRouter();
   return (
-    <main className="flex flex-col gap-32 items-center py-10 max-w-[320px] mx-auto">
+    <main className="flex flex-col gap-32 items-center py-8 max-w-[320px] mx-auto">
       <h1 className="text-2xl font-bold text-text-primary">
         Ryudhis&apos;s Notes
       </h1>
-      <div className="flex flex-col gap-16 items-center">
+      <div className="flex flex-col gap-8 items-center">
         <Image
           src="/images/login.svg"
           alt=""
