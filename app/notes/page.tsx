@@ -27,7 +27,8 @@ import { AddIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Header from "@/components/Header";
-import ReactQuill from "react-quill";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import truncateText from "@/utils/truncateText";
 
