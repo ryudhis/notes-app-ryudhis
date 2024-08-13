@@ -19,7 +19,6 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Textarea,
   Spinner,
   useToast,
   useMediaQuery,
@@ -47,10 +46,10 @@ const NotesPage = () => {
   const [sortBy, setSortBy] = useState("recent");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-  const regex = /(<([^>]+)>)/gi;
 
   useEffect(() => {
     fetchNotes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFilter = () => {

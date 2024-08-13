@@ -24,7 +24,6 @@ import {
   ModalHeader,
   FormLabel,
   Input,
-  Textarea,
   ModalFooter,
   Button,
   useMediaQuery,
