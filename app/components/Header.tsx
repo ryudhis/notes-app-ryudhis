@@ -27,7 +27,9 @@ const Header = ({
   setToDate,
 }) => {
   const initialRef = useRef(null);
-  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
+  const [isLargerThanXL] = useMediaQuery("(min-width: 1280px)");
+  const [isLargerThanLG] = useMediaQuery("(min-width: 1024px)");
+  const [isLargerThanMD] = useMediaQuery("(min-width: 768px)");
   const {
     isOpen: isSettingOpen,
     onOpen: onSettingOpen,
@@ -44,13 +46,20 @@ const Header = ({
       <IconButton
         onClick={isSettingOpen ? onSettingClose : onSettingOpen}
         size={"lg"}
+        className="md:scale-110 lg:scale-125 xl:scale-150"
         borderRadius={"full"}
         bgColor={"transparent"}
         aria-label="Settings"
         color={"primary-text"}
         icon={<SettingsIcon />}
       />
-      <Heading fontWeight={"black"} color={"primary-text"} fontSize={18}>
+      <Heading
+        fontWeight={"black"}
+        color={"primary-text"}
+        fontSize={
+          isLargerThanXL ? 30 : isLargerThanLG ? 26 : isLargerThanMD ? 22 : 18
+        }
+      >
         {sortBy === "recent" ? "Recent Notes" : "Oldest Notes"}
       </Heading>
       <IconButton
@@ -58,6 +67,7 @@ const Header = ({
         size={"lg"}
         borderRadius={"full"}
         bgColor={"transparent"}
+        className="md:scale-110 lg:scale-125 xl:scale-150"
         aria-label="Search"
         color={"primary-text"}
         icon={<Search2Icon />}
@@ -69,7 +79,7 @@ const Header = ({
       >
         <ModalOverlay />
         <ModalContent
-          maxW={isLargerThan768 ? 500 : 360}
+          maxW={isLargerThanXL ? "50%" : isLargerThanLG ? "60%" : "80%"}
           bgColor={"#FFFDFA"}
           py={2}
           borderRadius={"xl"}
@@ -100,7 +110,7 @@ const Header = ({
       >
         <ModalOverlay />
         <ModalContent
-          maxW={isLargerThan768 ? 500 : 360}
+          maxW={isLargerThanXL ? "50%" : isLargerThanLG ? "60%" : "80%"}
           bgColor={"#FFFDFA"}
           pt={2}
           pb={4}

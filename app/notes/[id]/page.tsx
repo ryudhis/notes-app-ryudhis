@@ -34,6 +34,8 @@ import { DeleteIcon, EditIcon, ChevronLeftIcon } from "@chakra-ui/icons";
 import { useParams } from "next/navigation";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { useRouter } from "next/navigation";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const NotesDetail = () => {
   const { note, loading, fetchNote, deleteNote, editNote } = useNotesStore();
@@ -53,7 +55,9 @@ const NotesDetail = () => {
   } = useDisclosure();
   const cancelRef = useRef();
   const initialRef = useRef(null);
-  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
+  const [isLargerThanXL] = useMediaQuery("(min-width: 1280px)");
+  const [isLargerThanLG] = useMediaQuery("(min-width: 1024px)");
+  const [isLargerThanMD] = useMediaQuery("(min-width: 768px)");
 
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -103,7 +107,7 @@ const NotesDetail = () => {
   useEffect(() => {
     fetchNote(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, refresh]); // Add refreshTrigger to the dependency array
+  }, [id, refresh]);
 
   useEffect(() => {
     if (note) {
@@ -173,8 +177,8 @@ const NotesDetail = () => {
           />
           <Card
             bgColor={"#FFFDFA"}
-            className="p-4 gap-2 hover:scale-105 transition-all ease-in-out duration-300 cursor-pointer active:scale-95"
-            w={"full"}
+            className="p-4 gap-2 transition-all ease-in-out duration-300 cursor-pointer active:scale-[98%]"
+            w={"95%"}
             h={"fit-content"}
             minH={"400px"}
             direction={"column"}
@@ -183,14 +187,47 @@ const NotesDetail = () => {
             justify={"space-between"}
           >
             <div className="flex flex-col gap-4">
-              <Heading fontWeight={"black"} fontSize={32}>
+              <Heading
+                fontWeight={"black"}
+                fontSize={
+                  isLargerThanXL
+                    ? 44
+                    : isLargerThanLG
+                    ? 40
+                    : isLargerThanMD
+                    ? 36
+                    : 32
+                }
+              >
                 {note.title}
               </Heading>
-              <Text fontWeight={"bold"} fontSize={22}>
-                {note.body}
-              </Text>
+              <Text
+                fontWeight={"bold"}
+                fontSize={
+                  isLargerThanXL
+                    ? 34
+                    : isLargerThanLG
+                    ? 30
+                    : isLargerThanMD
+                    ? 26
+                    : 22
+                }
+                dangerouslySetInnerHTML={{ __html: note.body }}
+              />
             </div>
-            <Text placeSelf={"end"} fontWeight={"semibold"} fontSize={16}>
+            <Text
+              placeSelf={"end"}
+              fontWeight={"semibold"}
+              fontSize={
+                isLargerThanXL
+                  ? 22
+                  : isLargerThanLG
+                  ? 20
+                  : isLargerThanMD
+                  ? 18
+                  : 16
+              }
+            >
               {convertDate(note.createdAt)}
             </Text>
           </Card>
@@ -227,19 +264,22 @@ const NotesDetail = () => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent
-            maxW={isLargerThan768 ? 500 : 360}
+            maxW={isLargerThanXL ? "50%" : isLargerThanLG ? "60%" : "80%"}
             className="max-w-[360px]"
             bgColor={"#FFFDFA"}
           >
             <AlertDialogHeader
-              fontSize="lg"
-              fontWeight="bold"
+              fontSize={isLargerThanMD ? "20" : "16"}
+              fontWeight={isLargerThanMD ? "bold" : "semibold"}
               color={"secondary-text"}
             >
               Delete Note
             </AlertDialogHeader>
 
-            <AlertDialogBody color={"secondary-text"}>
+            <AlertDialogBody
+              color={"secondary-text"}
+              fontSize={isLargerThanMD ? "20" : "16"}
+            >
               Are you sure? You can&apos;t undo this action afterwards.
             </AlertDialogBody>
 
@@ -258,14 +298,29 @@ const NotesDetail = () => {
         initialFocusRef={initialRef}
         isOpen={isModalOpen}
         onClose={onModalClose}
+        isCentered
       >
         <ModalOverlay />
-        <ModalContent maxW={isLargerThan768 ? 500 : 360} bgColor={"#FFFDFA"}>
-          <ModalHeader color={"secondary-text"}>Edit Note</ModalHeader>
+        <ModalContent
+          maxW={isLargerThanXL ? "50%" : isLargerThanLG ? "60%" : "80%"}
+          bgColor={"#FFFDFA"}
+        >
+          <ModalHeader
+            color={"secondary-text"}
+            fontSize={isLargerThanMD ? "20" : "16"}
+            fontWeight={isLargerThanMD ? "bold" : "semibold"}
+          >
+            Edit Note
+          </ModalHeader>
           <ModalCloseButton color={"flame-pea.500"} />
           <ModalBody pb={6}>
             <FormControl>
-              <FormLabel color={"secondary-text"}>Title</FormLabel>
+              <FormLabel
+                color={"secondary-text"}
+                fontSize={isLargerThanMD ? "20" : "16"}
+              >
+                Title
+              </FormLabel>
               <Input
                 ref={initialRef}
                 placeholder="Your note title here.."
@@ -275,12 +330,17 @@ const NotesDetail = () => {
               />
             </FormControl>
             <FormControl mt={4}>
-              <FormLabel color={"secondary-text"}>Body</FormLabel>
-              <Textarea
-                placeholder="Your note body content here.."
-                focusBorderColor="secondary-text"
+              <FormLabel
+                color={"secondary-text"}
+                fontSize={isLargerThanMD ? "20" : "16"}
+              >
+                Body
+              </FormLabel>
+              <ReactQuill
+                theme="snow"
                 value={body}
-                onChange={(e) => setBody(e.target.value)}
+                onChange={setBody}
+                placeholder="Your note body content here.."
               />
             </FormControl>
           </ModalBody>

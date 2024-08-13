@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${font.className} bg-primary-bg`}>
+      <body className={`${font.className} bg-primary-bg min-h-screen`}>
         <Providers>{children}</Providers>
       </body>
     </html>
