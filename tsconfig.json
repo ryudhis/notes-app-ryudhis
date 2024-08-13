@@ -16,14 +16,22 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/*": ["./app/*"],
+      "@components/*": ["./app/components/*"],
+      "@images/*": ["./public/images/*"],
+      "@lottie/*": ["./public/lottie/*"],
+      "@utils/*": ["./app/utils/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.jsx"
+    "**/*.jsx",
+    "**/*.json"
   ],
   "exclude": ["node_modules"]
 }

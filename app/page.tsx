@@ -32,7 +32,7 @@ const HomePage = () => {
         </div>
         <div className="flex flex-col gap-5 items-center">
           <Button
-            onClick={() => router.push("/login")}
+            onClick={() => router.push("/notes")}
             colorScheme="flame-pea"
             fontSize={20}
             fontWeight="black"

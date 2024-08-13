@@ -19,6 +19,9 @@ export const theme = extendTheme({
       "900": "#743328",
       "950": "#3e1811",
     },
+    "card-bg": "#D9614C",
+    "primary-text": "#403B36",
+    "secondary-text": "#595550",
   },
 });
 
