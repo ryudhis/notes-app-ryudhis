@@ -18,7 +18,7 @@ interface noteItem {
   body: string;
   createdAt: string;
 }
-
+  
 const useNotesStore = create<notes>((set) => ({
   notes: [],
   note: null,

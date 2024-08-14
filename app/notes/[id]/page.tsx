@@ -63,6 +63,17 @@ const NotesDetail = () => {
   const [body, setBody] = useState("");
 
   const handleEditNote = async () => {
+    const strippedBody = body.replace(/<(.|\n)*?>/g, "").trim();
+    if (title.trim() === "" || strippedBody.trim() === "") {
+      toast({
+        title: "Error",
+        description: "Both title and body are required.",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+      return;
+    }
     const editedNote = {
       id: id.toString(),
       title,
@@ -327,6 +338,7 @@ const NotesDetail = () => {
                 focusBorderColor="secondary-text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                required
               />
             </FormControl>
             <FormControl mt={4}>

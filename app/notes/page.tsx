@@ -97,132 +97,131 @@ const handleFilter = () => {
 
   const filteredNotes = handleFilter();
 
-  const handleAddNote = async () => {
-    const newNote = {
-      id: `${Date.now()}`,
-      title,
-      body,
-      createdAt: new Date().toISOString(),
-    };
-    const message = addNote(newNote);
-    toast.promise(Promise.resolve(message), {
-      loading: { title: "Saving note", description: "Please wait" },
-      success: {
-        title: "Note saved",
-        description: "Your note was saved successfully",
-      },
-      error: {
-        title: "Failed to save",
-        description: "There was an error saving your note",
-      },
+const handleAddNote = async () => {
+  const strippedBody = body.replace(/<(.|\n)*?>/g, "").trim();
+  if (title.trim() === "" || strippedBody.trim() === "") {
+    toast({
+      title: "Error",
+      description: "Both title and body are required.",
+      status: "error",
+      duration: 4000,
+      isClosable: true,
     });
-    onClose();
-    setTitle("");
-    setBody("");
+    return;
+  }
+
+  const newNote = {
+    id: `${Date.now()}`,
+    title,
+    body,
+    createdAt: new Date().toISOString(),
   };
 
-  return (
-    <main className="w-full min-h-screen flex justify-center py-6">
-      {loading ? (
-        <div className="flex flex-col justify-center items-center text-center">
-          <Spinner size="xl" color="flame-pea.500" />
+  const message = addNote(newNote);
+  toast.promise(Promise.resolve(message), {
+    loading: { title: "Saving note", description: "Please wait" },
+    success: {
+      title: "Note saved",
+      description: "Your note was saved successfully",
+    },
+    error: {
+      title: "Failed to save",
+      description: "There was an error saving your note",
+    },
+  });
+
+  onClose();
+  setTitle("");
+  setBody("");
+};
+
+return (
+  <main className="w-full min-h-screen flex justify-center py-6">
+    {loading ? (
+      <div className="flex flex-col justify-center items-center text-center">
+        <Spinner size="xl" color="flame-pea.500" />
+        <Text
+          mt={2}
+          color="flame-pea.500"
+          fontWeight={"bold"}
+          fontSize={20}
+          className="animate-pulse"
+        >
+          Loading...
+        </Text>
+      </div>
+    ) : filteredNotes.length === 0 ? (
+      <div className="w-full flex flex-col px-6 md:px-8 lg:px-10 xl:px-12">
+        <Header
+          searchTitle={searchTitle}
+          setSearchTitle={setSearchTitle}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          toDate={toDate}
+          setToDate={setToDate}
+        />
+        <div className="flex-grow flex flex-col items-center justify-center">
+          <Player
+            autoplay
+            loop
+            src="https://lottie.host/10bbc5fc-38ec-496b-b08c-988df6c00bf9/1VMOnQPW4e.json"
+            style={{ height: "300px", width: "300px", paddingRight: "20px" }}
+          ></Player>
           <Text
-            mt={2}
-            color="flame-pea.500"
+            className="text-center"
             fontWeight={"bold"}
-            fontSize={20}
-            className="animate-pulse"
+            fontSize={22}
+            color={"flame-pea.500"}
           >
-            Loading...
+            No notes found
           </Text>
         </div>
-      ) : filteredNotes.length === 0 ? (
-        <div className="w-full flex flex-col px-6 md:px-8 lg:px-10 xl:px-12">
-          <Header
-            searchTitle={searchTitle}
-            setSearchTitle={setSearchTitle}
-            sortBy={sortBy}
-            setSortBy={setSortBy}
-            fromDate={fromDate}
-            setFromDate={setFromDate}
-            toDate={toDate}
-            setToDate={setToDate}
-          />
-          <div className="flex-grow flex flex-col items-center justify-center">
-            <Player
-              autoplay
-              loop
-              src="https://lottie.host/10bbc5fc-38ec-496b-b08c-988df6c00bf9/1VMOnQPW4e.json"
-              style={{ height: "300px", width: "300px", paddingRight: "20px" }}
-            ></Player>
-            <Text
-              className="text-center"
-              fontWeight={"bold"}
-              fontSize={22}
-              color={"flame-pea.500"}
+      </div>
+    ) : (
+      <div className="mx-auto self-start w-full px-6 md:px-8 lg:px-10 xl:px-12">
+        <Header
+          searchTitle={searchTitle}
+          setSearchTitle={setSearchTitle}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          toDate={toDate}
+          setToDate={setToDate}
+        />
+        <div className="grid grid-cols-2 gap-4 md:gap-5 lg:gap-6 xl:gap-8 py-4 md:py-6 lg:py-8 xl:py-10">
+          {filteredNotes.map((note) => (
+            <Card
+              onClick={() => router.push(`/notes/${note.id}`)}
+              key={note.id}
+              bgColor={"#FFFDFA"}
+              className="p-4 gap-2 hover:scale-105 lg:hover:scale-[104%] xl:hover:scale-[102%] transition-all ease-in-out duration-300 cursor-pointer active:scale-95"
+              direction={"column"}
+              color={"secondary-text"}
+              borderRadius={"xl"}
+              justify={"space-between"}
             >
-              No notes found
-            </Text>
-          </div>
-        </div>
-      ) : (
-        <div className="mx-auto self-start w-full px-6 md:px-8 lg:px-10 xl:px-12">
-          <Header
-            searchTitle={searchTitle}
-            setSearchTitle={setSearchTitle}
-            sortBy={sortBy}
-            setSortBy={setSortBy}
-            fromDate={fromDate}
-            setFromDate={setFromDate}
-            toDate={toDate}
-            setToDate={setToDate}
-          />
-          <div className="grid grid-cols-2 gap-4 md:gap-5 lg:gap-6 xl:gap-8 py-4 md:py-6 lg:py-8 xl:py-10">
-            {filteredNotes.map((note) => (
-              <Card
-                onClick={() => router.push(`/notes/${note.id}`)}
-                key={note.id}
-                bgColor={"#FFFDFA"}
-                className="p-4 gap-2 hover:scale-105 lg:hover:scale-[104%] xl:hover:scale-[102%] transition-all ease-in-out duration-300 cursor-pointer active:scale-95"
-                direction={"column"}
-                color={"secondary-text"}
-                borderRadius={"xl"}
-                justify={"space-between"}
-              >
-                <div className="flex flex-col gap-2">
-                  <Heading
-                    fontWeight={"black"}
-                    fontSize={
-                      isLargerThanXL
-                        ? 28
-                        : isLargerThanLG
-                        ? 24
-                        : isLargerThanMD
-                        ? 20
-                        : 16
-                    }
-                  >
-                    {note.title.length > 32
-                      ? `${note.title.substring(0, 32)}...`
-                      : note.title}
-                  </Heading>
-                  <Text
-                    fontWeight={"bold"}
-                    fontSize={
-                      isLargerThanXL
-                        ? 22
-                        : isLargerThanLG
-                        ? 20
-                        : isLargerThanMD
-                        ? 16
-                        : 14
-                    }
-                    dangerouslySetInnerHTML={{
-                      __html: truncateText(note.body, 100),
-                    }}
-                  />
-                </div>
+              <div className="flex flex-col gap-2">
+                <Heading
+                  fontWeight={"black"}
+                  fontSize={
+                    isLargerThanXL
+                      ? 28
+                      : isLargerThanLG
+                      ? 24
+                      : isLargerThanMD
+                      ? 20
+                      : 16
+                  }
+                >
+                  {note.title.length > 32
+                    ? `${note.title.substring(0, 32)}...`
+                    : note.title}
+                </Heading>
                 <Text
+                  fontWeight={"bold"}
                   fontSize={
                     isLargerThanXL
                       ? 22
@@ -232,86 +231,102 @@ const handleFilter = () => {
                       ? 16
                       : 14
                   }
-                >
-                  {convertDate(note.createdAt)}
-                </Text>
-              </Card>
-            ))}
-          </div>
+                  dangerouslySetInnerHTML={{
+                    __html: truncateText(note.body, 100),
+                  }}
+                />
+              </div>
+              <Text
+                fontSize={
+                  isLargerThanXL
+                    ? 22
+                    : isLargerThanLG
+                    ? 20
+                    : isLargerThanMD
+                    ? 16
+                    : 14
+                }
+              >
+                {convertDate(note.createdAt)}
+              </Text>
+            </Card>
+          ))}
         </div>
-      )}
-      <IconButton
-        onClick={onOpen}
-        position={"fixed"}
-        className="bottom-5 right-5"
-        size={"lg"}
-        borderRadius={"full"}
-        bgColor={"white"}
-        aria-label="Add new notes"
-        shadow={"md"}
-        color={"flame-pea.500"}
-        icon={<AddIcon />}
-      />
-      <Modal
-        initialFocusRef={initialRef}
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered
+      </div>
+    )}
+    <IconButton
+      onClick={onOpen}
+      position={"fixed"}
+      className="bottom-5 right-5"
+      size={"lg"}
+      borderRadius={"full"}
+      bgColor={"white"}
+      aria-label="Add new notes"
+      shadow={"md"}
+      color={"flame-pea.500"}
+      icon={<AddIcon />}
+    />
+    <Modal
+      initialFocusRef={initialRef}
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered
+    >
+      <ModalOverlay />
+      <ModalContent
+        maxW={isLargerThanXL ? "50%" : isLargerThanLG ? "60%" : "80%"}
+        bgColor={"#FFFDFA"}
       >
-        <ModalOverlay />
-        <ModalContent
-          maxW={isLargerThanXL ? "50%" : isLargerThanLG ? "60%" : "80%"}
-          bgColor={"#FFFDFA"}
+        <ModalHeader
+          color={"secondary-text"}
+          fontSize={isLargerThanMD ? "20" : "16"}
+          fontWeight={isLargerThanMD ? "bold" : "semibold"}
         >
-          <ModalHeader
-            color={"secondary-text"}
-            fontSize={isLargerThanMD ? "20" : "16"}
-            fontWeight={isLargerThanMD ? "bold" : "semibold"}
-          >
-            Add new note
-          </ModalHeader>
-          <ModalCloseButton color={"flame-pea.500"} />
-          <ModalBody pb={6}>
-            <FormControl>
-              <FormLabel
-                color={"secondary-text"}
-                fontSize={isLargerThanMD ? "20" : "16"}
-              >
-                Title
-              </FormLabel>
-              <Input
-                ref={initialRef}
-                placeholder="Your note title here.."
-                focusBorderColor="secondary-text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel
-                color={"secondary-text"}
-                fontSize={isLargerThanMD ? "20" : "16"}
-              >
-                Body
-              </FormLabel>
-              <ReactQuill
-                theme="snow"
-                value={body}
-                onChange={setBody}
-                placeholder="Your note body content here.."
-              />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="flame-pea" mr={3} onClick={handleAddNote}>
-              Add
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </main>
-  );
+          Add new note
+        </ModalHeader>
+        <ModalCloseButton color={"flame-pea.500"} />
+        <ModalBody pb={6}>
+          <FormControl>
+            <FormLabel
+              color={"secondary-text"}
+              fontSize={isLargerThanMD ? "20" : "16"}
+            >
+              Title
+            </FormLabel>
+            <Input
+              ref={initialRef}
+              placeholder="Your note title here.."
+              focusBorderColor="secondary-text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel
+              color={"secondary-text"}
+              fontSize={isLargerThanMD ? "20" : "16"}
+            >
+              Body
+            </FormLabel>
+            <ReactQuill
+              theme="snow"
+              value={body}
+              onChange={setBody}
+              placeholder="Your note body content here.."
+            />
+          </FormControl>
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme="flame-pea" mr={3} onClick={handleAddNote}>
+            Add
+          </Button>
+          <Button onClick={onClose}>Cancel</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  </main>
+);
 };
 
 export default NotesPage;
