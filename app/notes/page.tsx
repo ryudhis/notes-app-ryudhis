@@ -53,33 +53,47 @@ const NotesPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleFilter = () => {
-    let filtered = notes.filter((note) =>
-      note.title.toLowerCase().includes(searchTitle.toLowerCase())
+const handleFilter = () => {
+  const fromDateObj = fromDate ? new Date(fromDate) : null;
+  const toDateObj = toDate ? new Date(toDate) : null;
+
+  if (toDateObj) {
+    toDateObj.setDate(toDateObj.getDate() + 1);
+  }
+
+  let filtered = notes.filter((note) =>
+    note.title.toLowerCase().includes(searchTitle.toLowerCase())
+  );
+
+  if (fromDateObj) {
+    filtered = filtered.filter((note) => {
+      const noteDate = new Date(note.createdAt);
+      return noteDate >= fromDateObj;
+    });
+  }
+
+  if (toDateObj) {
+    filtered = filtered.filter((note) => {
+      const noteDate = new Date(note.createdAt);
+      return noteDate < toDateObj;
+    });
+  }
+
+  if (sortBy === "recent") {
+    filtered.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
-    if (fromDate) {
-      filtered = filtered.filter(
-        (note) => new Date(note.createdAt) >= new Date(fromDate)
-      );
-    }
-    if (toDate) {
-      filtered = filtered.filter(
-        (note) => new Date(note.createdAt) <= new Date(toDate)
-      );
-    }
-    if (sortBy === "recent") {
-      filtered.sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-    } else {
-      filtered.sort(
-        (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-      );
-    }
-    return filtered;
-  };
+  } else {
+    filtered.sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+  }
+
+  return filtered;
+};
+
 
   const filteredNotes = handleFilter();
 
