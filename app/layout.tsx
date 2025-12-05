@@ -6,7 +6,7 @@ import { Providers } from "./providers";
 const font = Nunito({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: "http://localhost:3000",
+  metadataBase: new URL("http://localhost:3000"),
   title: "Notes App Ryudhis",
   description: "A Progressive Web App built with Next.js",
   icons: {
